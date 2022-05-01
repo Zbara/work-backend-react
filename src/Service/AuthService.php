@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 class AuthService
 {
@@ -29,11 +32,11 @@ class AuthService
 
         if ($user = $this->clientsRepository->findOneBy(['email' => $email, 'password' => $password])) {
             $user->setLastdateAt(time());
-
             $this->em->flush();
 
+            $session = new Session(new NativeSessionStorage(), new AttributeBag());
+            $session->set('user', $user->getId());
 
-            $response->headers->setCookie(Cookie::create('user', $user->getId()));
             $response->setContent(json_encode(['status' => 1]))
                 ->setStatusCode(Response::HTTP_OK)
                 ->send();

@@ -8,6 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
@@ -26,7 +29,7 @@ class LoginController extends AbstractController
     #[Route('/api/authentication', name: 'app_authentication', format: 'JSON')]
     public function authentication(Request $request, AuthService $authService, ClientsRepository $clientsRepository): Response
     {
-        if($user = $clientsRepository->findOneBy(['id' => $request->cookies->get('user')])){
+        if ($user = $clientsRepository->findOneBy(['id' => $request->getSession()->get('user')])) {
             return $this->json([
                 'id' => $user->getId()
             ]);
@@ -37,10 +40,10 @@ class LoginController extends AbstractController
     #[Route('/api/authentication/log-out', name: 'app_log_out', format: 'JSON')]
     public function authenticationLogout(Request $request, AuthService $authService, ClientsRepository $clientsRepository): Response
     {
-        if($user = $clientsRepository->findOneBy(['id' => $request->cookies->get('user')])){
-            $response = new Response();
-            $response->headers->clearCookie('user');
-            $response->setContent(json_encode([]))->send();
+        if ($user = $clientsRepository->findOneBy(['id' => $request->getSession()->get('user')])) {
+            $request->getSession()->remove('user');
+
+            return $this->json([], Response::HTTP_OK);
         }
         return $this->json([], Response::HTTP_UNAUTHORIZED);
     }
