@@ -17,7 +17,6 @@ class Clients
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\Email]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]

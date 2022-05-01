@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block title 'Редактирование Администратора' %}
+{% block header 'Редактирование Администратора' %}
+{% block main %}
+    <div class="row row-deck row-cards">
+        <div id="alert"></div>
+        <div class="col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Редактирование Логина</h3>
+                </div>
+                <div class="card-body">
+                    <form id="adminLogin">
+                        <div class="mb-3">
+                            <label class="form-label">Login</label>
+                            <div class="form-control-plaintext">{{ app.user.username }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Новый Login</label>
+                            <div class="input-group">
+                                <input type="text" id="client_username" name="username" placeholder="Введите новый логин" class="form-control">
+                                <div class="invalid-feedback" id="username">%%error%%</div>
+                            </div>
+                        </div>
+                        <div class="form-footer ">
+                            <button type="submit" id="client_submit" name="client[submit]" class="btn btn-primary">Изменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Редактирование пароля</h3>
+                </div>
+                <div class="card-body">
+                    <form id="adminPass">
+                        <div class="mb-3">
+                            <label class="form-label">Старый пароль</label>
+                            <div class="input-group">
+                                <input type="password" id="client_password_old" name="password_old" placeholder="Введите старый пароль" class="form-control">
+                                <div class="invalid-feedback" id="password_old">%%error%%</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Новый пароль</label>
+                            <div class="input-group">
+                                <input type="password" id="client_password" name="password" placeholder="Введите новый пароль" class="form-control">
+                                <div class="invalid-feedback" id="password">%%error%%</div>
+                            </div>
+                        </div>
+                        <div class="form-footer ">
+                            <button type="submit" id="client_submit" name="client[submit]" class="btn btn-primary">Изменить</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
