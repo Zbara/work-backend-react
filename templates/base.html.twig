@@ -1,19 +1,125 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="{{ app.request.locale }}">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block stylesheets %}{% endblock %}
+    {{ encore_entry_link_tags('styles') }}
+</head>
+<body class="theme-dark">
+<div class="wrapper">
+    <header class="navbar navbar-expand-md navbar-light d-print-none">
+        <div class="container-xl">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if app.user %}
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
+                           aria-label="Open user menu">
+                            <div class="d-none d-xl-block ps-2">
+                                <div>{{ app.user.username }} </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <a href="{{ path('app-logout') }}" class="dropdown-item">Выход</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-menu">
+                    <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+                        <ul class="navbar-nav">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+                            <li class="nav-item {{ is_active_route(app.request, ['app-main']) ? 'active' }}">
+                                <a class="nav-link"
+                                   href="{{ path('app-main') }}">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="24"
+                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <circle cx="9" cy="7" r="4"></circle>
+   <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+   <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+   <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+</svg>
+
+                    </span>
+                                    <span class="nav-link-title">
+                      Пользователи
+                    </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="nav-item">
+                        <a href="{{ path('app-login') }}" class="nav-link d-flex lh-1 text-reset p-0">
+                            <div class="d-none d-xl-block ps-2">
+                                Панель управления
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+    <div class="page-wrapper">
+        <div class="position-absolute p-3 top-0 end-0" style="z-index: 11">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true"
+                 data-bs-toggle="toast" data-bs-delay="3000">
+                <div class="toast-header">
+                    <strong class="me-auto">%title%</strong>
+                    <button type="button" class="ms-2 btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    %messages%
+                </div>
+            </div>
+        </div>
+        <div class="container-xl">
+            <div class="page-header d-print-none">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h2 class="page-title">
+                            {% block header %}{% endblock %}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-body">
+            <div class="container-xl">
+                {% block main %}{% endblock %}
+            </div>
+        </div>
+        <footer class="footer footer-transparent d-print-none">
+            <div class="container-xl">
+                <div class="row text-center align-items-center flex-row-reverse">
+                    <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                        <ul class="list-inline list-inline-dots mb-0">
+                            <li class="list-inline-item">
+                                Dev &copy; {{ "now"|date("Y") }}
+                            </li>
+                            <li class="list-inline-item">
+                                {#                                {{ gitFull() }}, {{ gitDate()|format_datetime('short', 'short') }} #}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
 </html>

@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block title 'Пользователи' %}
+{% block header 'Пользователи' %}
+{% block main %}
+    <div class="row row-deck row-cards">
+        <div class="col-md-4 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Добавление пользователя</h3>
+                </div>
+                <div class="card-body">
+                    <div id="alert"></div>
+                    {{ form_start(form, {'action': path('app-main'), 'attr': {'id': 'usersForm'}}) }}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form_label(form.email) }}</label>
+                        {{ form_row(form.email) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form_label(form.password) }}</label>
+                        {{ form_row(form.password) }}
+                    </div>
+                    <div class="form-footer ">
+                        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-lg-8">
+            <div class="card" style="height: calc(37rem + 10px)">
+                <div class="card-header">
+                    <h3 class="card-title">Список аккаунтов</h3>
+                </div>
+                <div class="card-body card-body-scrollable card-body-scrollable-shadow">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="ads-table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Email</th>
+                                <th>Пароль</th>
+                                <th>Создан</th>
+                                <th>Активность</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                            {% for item in items %}
+                                <tr id="user_{{ item.id }}" data-user-id="{{ item.id }}">
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.email }}</td>
+                                    <td>{{ item.password }}</td>
+                                    <td>{{ item.createdAt|format_datetime('long', 'medium', '') }}</td>
+
+                                    {% if item.lastdateAt > 0 %}
+                                        <td>{{ item.lastdateAt|format_datetime('long', 'medium', '') }}</td>
+                                    {% else %}
+                                        <td>Нет активности</td>
+                                    {% endif %}
+                                    <td>
+                                    <span class="text-muted cursor-pointer" data-bs-toggle="tooltip"
+                                          data-bs-placement="bottom" data-bs-original-title="Удалить"
+                                          id="delete-users">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                 stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
+                                                                                                      d="M0 0h24v24H0z"
+                                                                                                      fill="none"></path><line
+                                                        x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18"
+                                                                                                   y2="18"></line></svg> </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
