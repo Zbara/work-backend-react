@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Repository\ClientsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\ArrayShape;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthService
 {
@@ -22,22 +24,20 @@ class AuthService
 
     public function helper(string $email, string $password)
     {
-        $user = $this->clientsRepository->findOneBy(['email' => $email, 'password' => $password]);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
 
-        if (isset($user)) {
+        if ($user = $this->clientsRepository->findOneBy(['email' => $email, 'password' => $password])) {
             $user->setLastdateAt(time());
 
             $this->em->flush();
 
-            $this->setResult(['status' => 1], 200);
-        } else {
-            $this->setResult(['status' => 0], 401);
-        }
-    }
 
-    private function setResult($result, $code)
-    {
-        $this->result = $result;
-        $this->code = $code;
+            $response->headers->setCookie(Cookie::create('user', $user->getId()));
+            $response->setContent(json_encode(['status' => 1]))
+                ->setStatusCode(Response::HTTP_OK)
+                ->send();
+        }
+        $response->setContent(json_encode(['status' => 0]))->setStatusCode(Response::HTTP_UNAUTHORIZED)->send();
     }
 }

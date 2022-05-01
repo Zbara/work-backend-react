@@ -14,7 +14,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            pattern:   ^/
+            pattern:   ^/admin
             anonymous: true
             provider: auth
             form_login:
